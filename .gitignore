@@ -1,0 +1,11 @@
+node_modules
+.secret
+build
+.vscode
+coverage
+.DS_Store
+coverage.json
+.openzeppelin/unknown-*.json
+RIFScheduler*.json
+types
+dist
