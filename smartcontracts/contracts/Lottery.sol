@@ -1,14 +1,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Lottery is Ownable {
-  address payable[] public players;
-  uint256 public entryFee;
+  address[] public players;
   LOTTERY_STATE public lotteryState;
-  address payable public recentWinner;
-  IERC20 public token;
+  address public recentWinner;
+  IERC20 private _token;
 
   enum LOTTERY_STATE {
     OPEN,
@@ -16,10 +15,9 @@ contract Lottery is Ownable {
     CLOSED
   }
 
-  constructor(uint256 fee, address tokenAddress) {
-    entryFee = fee;
+  constructor(IERC20 token) {
     lotteryState = LOTTERY_STATE.CLOSED;
-    token = IERC20(tokenAddress);
+    _token = token;
   }
 
   function enter() external {
@@ -27,8 +25,9 @@ contract Lottery is Ownable {
       lotteryState == LOTTERY_STATE.OPEN,
       "Lottery must be opened in order to participate."
     );
-    require(token.transferFrom(msg.sender, address(this), entryFee), "Not enough tokens");
-    players.push(payable(msg.sender));
+    address from = msg.sender;
+    require(_token.transferFrom(from, address(this), 10000000));
+    players.push(msg.sender);
   }
 
   function startLoterry() public onlyOwner {
@@ -46,19 +45,26 @@ contract Lottery is Ownable {
       "Lottery must be opened in order to be closed."
     );
 
-    require(
-      players.length > 1,
-      "There must be atleast 2 players in order for the lottery to be ended"
-    );
+    if (players.length == 0) {
+      lotteryState = LOTTERY_STATE.CLOSED;
+      return;
+    }
+
+    if (players.length == 1) {
+      uint256 lotteryBalance = _token.balanceOf(address(this));
+      _token.transfer(players[0], lotteryBalance);
+      lotteryState = LOTTERY_STATE.CLOSED;
+      return;
+    }
 
     lotteryState = LOTTERY_STATE.CALCULATING_WINNER;
 
     uint256 winnerIndex = random() % players.length;
     recentWinner = players[winnerIndex];
 
-    uint256 lotteryBalance = token.balanceOf(address(this));
-    token.transferFrom(address(this), recentWinner, lotteryBalance);
-    players = new address payable[](0);
+    uint256 lotteryBalance = _token.balanceOf(address(this));
+    _token.transfer(recentWinner, lotteryBalance);
+    players = new address[](0);
 
     lotteryState = LOTTERY_STATE.CLOSED;
   }

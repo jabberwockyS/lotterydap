@@ -6,7 +6,7 @@ module.exports = async (deployer, network, accounts) => {
     const [contractAdmin, payee] = accounts
     console.log(accounts)
     if (network === 'development' || network === 'rskTestnet' ) { 
-        await deployer.deploy(SirGeoToken, web3.utils.toBN(10000000000000000000))
+        await deployer.deploy(SirGeoToken)
         console.log('Contract implementation: ' + SirGeoToken.address)
     }
 }
