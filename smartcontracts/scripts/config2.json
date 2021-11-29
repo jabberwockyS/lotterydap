@@ -1,0 +1,14 @@
+{
+    "providerUrl": "http://localhost:7545",
+    "account1PK":
+      "d28d03464b0c7147d893edc30580e3310f867bbe1aac9bf7443224e3f0c443f4",
+      "account1": "0x6Fd496Da52b89998408f083CEf314D44ad41a459",
+   "account2PK":
+      "25e2f2f8d483b9adc4df3602daf1abcd0af5e6727ad9579ac60cc20132a6e4b7",
+      "acctoun2": "0x79A34ca9DC1aEebBBa0E526DAbE908A2CD63777B",
+      "account3PK":
+      "68c974c9707b6f84734c3c0bc984cfab5fe903d21db4df7c458abb63f63b62cc",
+      "account3": "0x8048bB4fCe3a15f0ad238B045890a475B5ef0284",
+      "lotteryContractAddress": "0x92fD0F2336f5004475D45eC3b707688cbc950E9C",
+      "sirgeoTokenAddress": "0x4CC285ca08F4db34E0670b625c8603B4b2802872"
+  }
